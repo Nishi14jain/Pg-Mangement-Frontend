@@ -2,9 +2,10 @@ import React from "react";
 import Login from "../pages/Login"; 
 import Register from "../pages/Register"; 
 import Dashboard from "../pages/Dashboard"; 
+import Settings from "../pages/Settings";
+import DashboardLayout from "../layouts/DashboardLayout";
 
-
-const RouteConfig = [
+const routes = [
     {
         path: "/login", 
         element: React.createElement(Login)
@@ -15,7 +16,21 @@ const RouteConfig = [
     },
     {
         path: "/dashboard", 
-        element: React.createElement(Dashboard)
-    }
+        element: React.createElement(DashboardLayout),
+
+    children: [
+        {
+            index: true, 
+            element : React.createElement(Dashboard),
+        },
+        {
+            path: "settings",
+            element: React.createElement(Settings), 
+        }, 
+    ], 
+},
+
+   
+    
 ];
-export default RouteConfig    ; 
+export default routes    ; 
