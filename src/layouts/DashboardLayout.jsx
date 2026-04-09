@@ -1,27 +1,58 @@
-import Header from "../components/Header";
-import SideBar from "../components/SideBar";
-import { Outlet } from "react-router-dom";
+import React from 'react'; 
+import {Link} from 'react-router-dom'; 
 
-export default function DashboardLayout(){
+
+const DashboardLayout =({ children}) => {
     return(
-        <div className="flex min-h-screen">
-            {/* sidebar*/}
-            <SideBar />
+        <div className='flex h-screen bg-gray-100'>
+            {/* Sidebar */}
+            <aside className="w-64 bg-indigo-900 text-white flex flex-col">
+                <div className="p-6 text-2x; font-bold border-b border-indigo-800">
+                    Pg Master
+                </div>
+                <nav className="flex-1 p-4 space-y-2">
+                    <link to="/dashboard" className="block p-3 rounded hover:bg-indigo-800 transition" >
+                    Dashboard
+                    </link>
 
-            {/*Right Section */}
+                    <link to="/rooms" className="block p-3 rounded hover:bg-indigo-800 transition">
+                        Rooms 
+                    </link>
 
-            <div className="flex-1 flex flex-col">
-                {/* Header*/}
-                <Header />
+                     <link to="/residents" className="block p-3 rounded hover:bg-indigo-800 transition">
+                        Residents 
+                    </link>
 
-            {/* Page Content */}
-            <div className="p-6 bg-gray-100 flex-1">
-                <Outlet />
-            </div>
+                     <link to="/payments" className="block p-3 rounded hover:bg-indigo-800 transition">
+                        Payments 
+                    </link>
 
-            </div>
+                    <link to="/settings" className="block p-3 rounded hover:bg-indigo-800 transition">
+                        Settings 
+                    </link>
+                     
+                </nav>
+            </aside>
 
+            {/* Main Content Area*/}
 
+            <main className="flex-1 orverflow-y-auto">
+
+                <header className='bg-white shadow-sm p-4 flex justify-between'>
+                    <h2 className='text-xl font-semibold text-gray-700'>
+                        Admin Portal
+                    </h2>
+                    <button className="text-gray-500 hover:text-red-500">
+                    Logout
+                    </button>
+                </header>
+
+                <div className="p-6">
+                    {children}
+                </div>
+            </main>
         </div>
-    )
-}
+    );
+};
+
+export default DashboardLayout; 
