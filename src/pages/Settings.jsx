@@ -2,107 +2,64 @@ import {useState} from "react";
 import axios from "axios"; 
 
 export default function Settings() {
+  // 1. Create the Switch state
+  // default is profile
+  const [activeTab, setActiveTab] = useState('profile'); 
   const [appName, setAppName] = useState("");
   const [logo, setLogo] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
 
 
-  const handleSubmit = async  (e) => {
+ return(
+    <div className="bg-white p-5 rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800"> Settings</h1>
 
-    e.preventDefault();
+      {/* 2. The Tab BUttons */}
+       <div className="flex border-b border-gray-200 mb-6">
+         <button onClick={() => setActiveTab('profile')}
+            className={`py-2 px-4 font-medium transition $ {activeTab === 'profile' ? 'border-b-2 border-indigo-600 text-indigo-600 : 'text-gray-500 hover:text-gray-700'}`} >
+                        Profile
+         </button>
+         <button
+          onClick={() => setActiveTab('pg-details')}
+          className={`py-2 px-4 font-medium transition ${
+            activeTab === 'pg-details' 
+              ? 'border-b-2 border-indigo-600 text-indigo-600' 
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          🏠 PG Details
+        </button>
+       </div>
 
-    const formData = new FormData();
-    formData.append("app_name", appName);
-    formData.append("logo", logo);
-    formData.append("user_name", userName);
-    formData.append("email", email);
-
-    try{
-      const res = await axios.post(
-        "http://127.0.0.1:8000/api/settings",
-        formData
-        
-      );
-
-      alert("Settings saved");
-      console.log(res.data); 
-
-    }catch(err){
-      console.log(err);
-    }
-
-    console.log("Form Data Ready:" , appName, logo, userName, email);
-    
-
-}; 
-
-return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-
-          <h1 className="text-3xl font-semibold mb-6 ">Settings </h1>
-          <form onSubmit={handleSubmit} className="bg-white shadow rounded-xl p-6 space-y-8">
-            {/* AppSettings */}
-
+       {/* 3. The Content (Conditional Rendering) */}
+      <div className="mt-4">
+        {activeTab === 'profile' && (
+          <form className="space-y-4">
             <div>
-              <h2 className="block mb-1 text-gray-600">AppSettings</h2>
-
-              <div className="space-y-4">
-                  <div>
-                    <label className="block mb-1 text-gray-600"> App Name </label>
-                    <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)}
-                          className="w-full border rounded-lg p-2"
-                          placeholder="Enter App Name"/>
-                  </div>
-
-                  <div> 
-                    <label className="block mb-1 text-gray-600">
-                      App Logo
-                    </label>
-                    <input type="file"
-                      onChange={(e) => setLogo(e.target.files[0])}
-                      className="w-full border rounded-lg p-2" />
-                  </div>
-              </div>
+              <label className="block text-sm font-medium text-gray-700">Admin Name</label>
+              <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Name" />
             </div>
-
-            {/*User Settings */}
-
-            <div>
-              <h2 className="text-xl font-semibold mb-4"> User Settings</h2>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block mb-1 text-gray-600">
-                    Name
-                  </label>
-                  <input type="text" value={userName} onChange={(e)=> setUserName(e.target.value)}
-                    className="w-full border rounded-lg p-2" placeholder="Enter Name"/>
-                 </div>
-
-                 <div>
-                   <label className="block mb-1 text-gray-600">
-                      Email
-                   </label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border rounded-lg p-2" placeholder="Enter Email"  />
-                 </div>
-              </div>
-            </div>
-
-            {/*Save Button*/}
-
-            <div>
-            <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-              Save Settings
-            </button>
-            </div>
-
-
+            <button className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
           </form>
+        )}
+
+        {activeTab === 'pg-details' && (
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">PG Address</label>
+              <textarea className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Full Address"></textarea>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Monthly Rent (Avg)</label>
+              <input type="number" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            </div>
+            <button className="bg-green-600 text-white px-4 py-2 rounded">Update PG Info</button>
+          </form>
+        )}
+      </div>
     </div>
-
-  );
+ )
 }
-
 

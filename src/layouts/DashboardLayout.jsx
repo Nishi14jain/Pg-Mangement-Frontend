@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {Link} from 'react-router-dom'; 
+import {Link, Outlet} from 'react-router-dom'; 
 
 
 const DashboardLayout =({ children}) => {
@@ -11,25 +11,14 @@ const DashboardLayout =({ children}) => {
                     Pg Master
                 </div>
                 <nav className="flex-1 p-4 space-y-2">
-                    <link to="/dashboard" className="block p-3 rounded hover:bg-indigo-800 transition" >
+                    <Link to="/dashboard" className="block p-3 rounded hover:bg-indigo-800 transition" >
                     Dashboard
-                    </link>
+                    </Link>
 
-                    <link to="/rooms" className="block p-3 rounded hover:bg-indigo-800 transition">
-                        Rooms 
-                    </link>
 
-                     <link to="/residents" className="block p-3 rounded hover:bg-indigo-800 transition">
-                        Residents 
-                    </link>
-
-                     <link to="/payments" className="block p-3 rounded hover:bg-indigo-800 transition">
-                        Payments 
-                    </link>
-
-                    <link to="/settings" className="block p-3 rounded hover:bg-indigo-800 transition">
+                    <Link to="/settings" className="block p-3 rounded hover:bg-indigo-800 transition">
                         Settings 
-                    </link>
+                    </Link>
                      
                 </nav>
             </aside>
@@ -48,7 +37,7 @@ const DashboardLayout =({ children}) => {
                 </header>
 
                 <div className="p-6">
-                    {children}
+                    <Outlet />
                 </div>
             </main>
         </div>
