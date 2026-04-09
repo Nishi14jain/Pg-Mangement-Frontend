@@ -22,14 +22,12 @@ export default function Settings() {
                         Profile
          </button>
          <button
-          onClick={() => setActiveTab('pg-details')}
+          onClick={() => setActiveTab('theme-setting')}
           className={`py-2 px-4 font-medium transition ${
-            activeTab === 'pg-details' 
+            activeTab === 'theme-setting' 
               ? 'border-b-2 border-indigo-600 text-indigo-600' 
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          🏠 PG Details
+              : 'text-gray-500 hover:text-gray-700'}`}>
+           Theme Setting
         </button>
        </div>
 
@@ -38,24 +36,44 @@ export default function Settings() {
         {activeTab === 'profile' && (
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Admin Name</label>
+              <label className="block text-sm font-medium text-gray-700">Owner Name</label>
               <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Name" />
             </div>
+
+            <div> 
+              <label className="block text-sm font-medium text-gray-700">Owner Email</label>
+              <input type="email" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Email" />
+            </div>
+            <div> 
+              <label className="block text-sm font-medium text-gray-700"> Password</label>
+              <input type="password" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your password" />
+            </div>
+
             <button className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
           </form>
         )}
 
-        {activeTab === 'pg-details' && (
+        {activeTab === 'theme-setting' && (
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">PG Address</label>
-              <textarea className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Full Address"></textarea>
+              <input type="file" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Upload Logo" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Monthly Rent (Avg)</label>
-              <input type="number" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+              <label className="block text-sm font-medium text-gray-700">App Name</label>
+              <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter App Name" />
             </div>
-            <button className="bg-green-600 text-white px-4 py-2 rounded">Update PG Info</button>
+
+            <div>
+            <label className="block text-sm font-medium text-gray-700">Theme  Color</label>
+      <input 
+        type="color" 
+        value={primaryColor} 
+        onChange={(e) => setPrimaryColor(e.target.value)} />
+      <p>Selected Color: {primaryColor}</p>
+    </div>
+
+            <button className="bg-green-600 text-white px-4 py-2 rounded">Update Theme Setting</button>
           </form>
         )}
       </div>
