@@ -10,7 +10,25 @@ export default function Settings() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [primaryColor, setPrimaryColor] = useState("#4f46e5"); 
+   
+  const handleSaveSettings = async (e) => {
+    e.preventDefault(); //Prevents the page from refreshing
+  
+    try{
+      const response = await axios.post('http://localhost:8000/api/settings', {
+        app_name: appName, 
+        primary_color: primaryColor, 
+        owner_name : userName, 
+        owner_email: email
+      }); 
 
+      alert(response.data.message); //settings saved successfully
+    }catch(error){
+      console.error("Error saving settings: ", error);
+      alert("Something went wrong. Please try again.");
+    }
+
+  };
 
   return (
     <div className="bg-white p-5 rounded-lg shadow-md">
@@ -49,7 +67,7 @@ export default function Settings() {
               <input type="password" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your password" />
             </div>
 
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
+            <button onClick={handleSaveSettings} className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
           </form>
         )}
 
