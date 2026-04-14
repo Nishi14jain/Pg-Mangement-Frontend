@@ -6,29 +6,46 @@ export default function Settings() {
   // default is profile
   const [activeTab, setActiveTab] = useState('profile');
   const [appName, setAppName] = useState("");
-  const [logo, setLogo] = useState("");
+  const [logo, setLogo] = useState(null); // Use null for files
+  const [logPreview, setLogoPreview] = useState("null"); // Optional: to show the image after selecting
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState(""); 
   const [primaryColor, setPrimaryColor] = useState("#4f46e5"); 
    
   const handleSaveSettings = async (e) => {
     e.preventDefault(); //Prevents the page from refreshing
-  
+    
+    //1. Create the formdata object
+    const formData = new FormData(); 
+    //2. Append all your text data
+    formData.append('app_name', appName); 
+    formData.append('primary_color', primaryColor); 
+    formData.append('owner_name', userName); 
+    formData.append('owner_email', email); 
+    formData.append('password', password); 
+
+    // 3. Append the file (logo)
+    //'app_logo' must match the key laravel is looking for   
+    if(logo){
+      formData.append('app_logo', logo); 
+    } 
+
     try{
-      const response = await axios.post('http://localhost:8000/api/settings', {
-        app_name: appName, 
-        primary_color: primaryColor, 
-        owner_name : userName, 
-        owner_email: email
+      const response = await axios.post('http://localhost:8000/api/settings', formData,{
+        headers:{
+          //4. Tell the server we are sending a file
+          'Content_Type': 'multipart/form-data', 
+        }, 
       }); 
-
-      alert(response.data.message); //settings saved successfully
-    }catch(error){
-      console.error("Error saving settings: ", error);
-      alert("Something went wrong. Please try again.");
+      alert(response.data.message); 
     }
-
-  };
+    catch(error){
+      console.error("Error saving settings :", error); 
+      //Better error message for debugging
+      alert(error.response?.data?.message || "Something went wrong.");
+    }
+    };
 
   return (
     <div className="bg-white p-5 rounded-lg shadow-md">
@@ -55,16 +72,22 @@ export default function Settings() {
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Owner Name</label>
-              <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Name" />
+              <input type="text" value={userName} onChange={(e) => 
+                setUserName(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Name" />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">Owner Email</label>
-              <input type="email" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Email" />
+              <input type="email" value={email} onChange={(e) =>
+                setEmail(e.target.value) }  
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your Email" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700"> Password</label>
-              <input type="password" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your password" />
+              <input type="password" value={password} onChange={(e) => 
+                setPassword(e.target.value)} 
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your password" />
             </div>
 
             <button onClick={handleSaveSettings} className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
@@ -84,7 +107,15 @@ export default function Settings() {
                   <div className="flex text-sm text-gray-600">
                     <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">
                       <span>Upload a file</span>
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                      <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*" 
+                      onChange={(e)=>{
+                          const file = e.target.files[0];
+                          if(file){
+                            setLogo(file);
+                            setLogoPreview(URL.createObjectURL(file));  //create a temp URL for the preview
+                          }
+                      }}
+                      />
                     </label>
                     <p className="pl-1">or drag and drop</p>
                   </div>
@@ -94,7 +125,7 @@ export default function Settings() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">App Name</label>
-              <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter App Name" />
+              <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter App Name" />
             </div>
 
             <div>
@@ -122,7 +153,7 @@ export default function Settings() {
                 <p className="mt-1 text-xs text-gray-500">Click the box to pick or type a hex code.</p>
             </div>
 
-            <button className="bg-green-600 text-white px-4 py-2 rounded">Update Theme Setting</button>
+            <button onClick={handleSaveSettings}  className="bg-green-600 text-white px-4 py-2 rounded">Update Theme Setting</button>
           </form>
         )}
       </div>
