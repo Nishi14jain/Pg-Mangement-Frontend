@@ -12,40 +12,45 @@ export default function Settings() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); 
   const [primaryColor, setPrimaryColor] = useState("#4f46e5"); 
-   
-  const handleSaveSettings = async (e) => {
-    e.preventDefault(); //Prevents the page from refreshing
-    
+
     //1. Create the formdata object
-    const formData = new FormData(); 
-    //2. Append all your text data
-    formData.append('app_name', appName); 
-    formData.append('primary_color', primaryColor); 
-    formData.append('owner_name', userName); 
-    formData.append('owner_email', email); 
-    formData.append('password', password); 
+  
+     const handleSaveProfile = async(e) => {
+      e.preventDefault();
 
-    // 3. Append the file (logo)
-    //'app_logo' must match the key laravel is looking for   
-    if(logo){
-      formData.append('app_logo', logo); 
-    } 
+          try {
+            
+              const response = await axios.post('http://localhost:8000/api/profileSettings', {
+                  owner_name: userName,
+                  owner_email: email,
+                  password: password
+              });
+              alert(response.data.message);
+          } catch (error) {
+              alert(error.response?.data?.message || "Profile update failed");
+          }
+        
+      }    
 
-    try{
-      const response = await axios.post('http://localhost:8000/api/settings', formData,{
-        headers:{
-          //4. Tell the server we are sending a file
-          'Content_Type': 'multipart/form-data', 
-        }, 
-      }); 
-      alert(response.data.message); 
-    }
-    catch(error){
-      console.error("Error saving settings :", error); 
-      //Better error message for debugging
-      alert(error.response?.data?.message || "Something went wrong.");
-    }
-    };
+   // 2. Function for Theme Update (Handles the File)
+      const handleSaveTheme = async (e) => {
+          e.preventDefault();
+          const formData = new FormData();
+          formData.append('app_name', appName);
+          formData.append('primary_color', primaryColor);
+          if (logo) formData.append('app_logo', logo);
+
+          try {
+              const response = await axios.post('http://localhost:8000/api/settings/updateSettings', formData, {
+                  headers: { 'Content-Type': 'multipart/form-data' }
+              });
+              alert(response.data.message);
+          } catch (error) {
+              alert(error.response?.data?.message || "Theme update failed");
+          }
+
+        }
+
 
   return (
     <div className="bg-white p-5 rounded-lg shadow-md">
@@ -90,7 +95,7 @@ export default function Settings() {
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Your password" />
             </div>
 
-            <button onClick={handleSaveSettings} className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
+            <button onClick={handleSaveProfile} className="bg-indigo-600 text-white px-4 py-2 rounded">Save Profile</button>
           </form>
         )}
 
@@ -153,11 +158,11 @@ export default function Settings() {
                 <p className="mt-1 text-xs text-gray-500">Click the box to pick or type a hex code.</p>
             </div>
 
-            <button onClick={handleSaveSettings}  className="bg-green-600 text-white px-4 py-2 rounded">Update Theme Setting</button>
+            <button onClick={handleSaveTheme}  className="bg-green-600 text-white px-4 py-2 rounded">Update Theme Setting</button>
           </form>
         )}
       </div>
     </div>
   )
-}
+};
 

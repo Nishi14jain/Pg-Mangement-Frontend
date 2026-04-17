@@ -1,46 +1,31 @@
 import React from 'react'; 
 import {Link, Outlet} from 'react-router-dom'; 
+import SideBar from '../components/Sidebar';
+import Header from '../components/Header';
+import { useState } from 'react';
 
 
 const DashboardLayout =({ children}) => {
+    const[isOpen, setIsOpen] = useState(true); 
+    const toggleSidebar = () => setIsOpen(!isOpen); 
     return(
-        <div className='flex h-screen bg-gray-100'>
-            {/* Sidebar */}
-            <aside className="w-64 bg-indigo-900 text-white flex flex-col">
-                <div className="p-6 text-2x; font-bold border-b border-indigo-800">
-                    Pg Master
-                </div>
-                <nav className="flex-1 p-4 space-y-2">
-                    <Link to="/dashboard" className="block p-3 rounded hover:bg-indigo-800 transition" >
-                    Dashboard
-                    </Link>
 
+        <div className='flex h-screen bg-gray-100 overflow-hidden'>
+            {/* 1. SideBar gets the state */}
+             <SideBar isOpen={isOpen} />
+              {/* 2. Main Content Area */}
+            <div className="flex-1 flex flex-col min-w-0">
+                
+                {/* 3. Header gets the toggle function */}
+                <Header onToggle={toggleSidebar} />
 
-                    <Link to="/settings" className="block p-3 rounded hover:bg-indigo-800 transition">
-                        Settings 
-                    </Link>
-                     
-                </nav>
-            </aside>
-
-            {/* Main Content Area*/}
-
-            <main className="flex-1 orverflow-y-auto">
-
-                <header className='bg-white shadow-sm p-4 flex justify-between'>
-                    <h2 className='text-xl font-semibold text-gray-700'>
-                        Admin Portal
-                    </h2>
-                    <button className="text-gray-500 hover:text-red-500">
-                    Logout
-                    </button>
-                </header>
-
-                <div className="p-6">
+                <main className="flex-1 overflow-y-auto p-6">
                     <Outlet />
-                </div>
-            </main>
+                </main>
+            </div>
+
         </div>
+
     );
 };
 

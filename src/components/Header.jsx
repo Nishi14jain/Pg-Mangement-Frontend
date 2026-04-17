@@ -1,29 +1,40 @@
 import {useNavigate} from "react-router-dom";
+import {FaBars } from "react-icons/fa"; 
 
-export default function Header() {
+export default function Header({onToggle}) {
     const navigate = useNavigate();
-
     const user = JSON.parse(localStorage.getItem("user"));
+
     const handleLogout = () => {
         localStorage. removeItem("token"); 
-        loalstorage.removeItem("user");
+        localstorage.removeItem("user");
         navigate("/login");
     };
 
     return (
-        <div className="flex justify-between items-center bg-white shadow px-6 py-3 ">
-          {/* Left -Logo */}
-           <div className="text-xl font-bold text-blue-600 cursor-pointer">
-            MyApp
 
-           </div>
+        <div className="flex justify-between items-center bg-white shadow px-6 py-3">
+            <div className="flex item-center gap-4">
+                {/* Toggle Button */}
+                <button onClick={onToggle} className="p-2 rounded-md hover:bg-gray-100 text-gray-600">
+                    <FaBars size={20} />
+                </button>
 
-           {/* Right - User Info */}
-           <div className="flex items-center gap-4">
-            <span className="text-gray-600">{user?.name}</span>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onClick={handleLogout}>Logout</button>
-           </div>
+                <div className="text-xl font-bold text-blue-600 cursor-pointer"> My App</div>
+            </div>
+
+            <div className="flex items-center gap-4">
+                <span className="text-gray-600">{user?.name || "User"}
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                    onClick={handleLogout}>
+                        LogOut
+                    </button>
+                </span>
+            </div>
+
         </div>
+
+     
     );
 
 }
