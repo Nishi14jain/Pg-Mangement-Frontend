@@ -1,13 +1,16 @@
-import {useNavigate} from "react-router-dom";
-import {FaBars } from "react-icons/fa"; 
+import {useNavigate, Link } from "react-router-dom";
+import { useState, useRef , useEffect } from "react-router-dom";
+import {FaChevronDown, FaBars, FaUser, FaSignOutAlt, FaCog } from "react-icons/fa"; 
 
 export default function Header({onToggle}) {
     const navigate = useNavigate();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+    const dropdownRef = useRef(null); 
     const user = JSON.parse(localStorage.getItem("user"));
 
     const handleLogout = () => {
         localStorage. removeItem("token"); 
-        localstorage.removeItem("user");
+        localStorage.removeItem("user");
         navigate("/login");
     };
 
@@ -24,6 +27,7 @@ export default function Header({onToggle}) {
             </div>
 
             <div className="flex items-center gap-4">
+            <FaUser size={10} />
                 <span className="text-gray-600">{user?.name || "User"}
                     <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
                     onClick={handleLogout}>
